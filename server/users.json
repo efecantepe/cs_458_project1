@@ -1,0 +1,38 @@
+[
+
+    {
+
+        "email" : "efecantepe@gmail.com",
+        "phone" : "5423512614",
+        "address" : "Nev B Serhat 14/42",
+        "password" : "123456"
+
+    },
+
+    {
+
+        "email" : "tepe@gmail.com",
+        "phone" : "5423512614",
+        "address" : "hat 14/42",
+        "password" : "12"
+
+    },
+
+    {
+
+        "email" : "can@gmail.com",
+        "phone" : "5423512614",
+        "address" : "Serhat 14/42",
+        "password" : "a"
+
+    },
+
+    {
+
+        "email" : "hasan@gmail.com",
+        "phone" : "5423512614",
+        "address" : "Nev B Serhat 14/42",
+        "password" : "b"
+
+    }
+]
