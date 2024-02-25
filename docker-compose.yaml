@@ -8,7 +8,7 @@ services:
     ports:
       - 3307:3306
     environment:
-      MYSQL_ROOT_PASSWORD: haluk123
+      MYSQL_ROOT_PASSWORD: haluk1234
       MYSQL_DATABASE: cs458-db
       MYSQL_USER: haluk
       MYSQL_PASSWORD: haluk123

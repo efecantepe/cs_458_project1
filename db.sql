@@ -1,4 +1,5 @@
 SET sql_mode = 'STRICT_ALL_TABLES';
+
 CREATE TABLE USERS(
     id INT AUTO_INCREMENT PRIMARY KEY,
     password VARCHAR(30) NOT NULL,
@@ -6,3 +7,10 @@ CREATE TABLE USERS(
     phone_no VARCHAR(16) NOT NULL UNIQUE,
     address VARCHAR(128)
 );
+
+-- Insert example users with realistic-looking email addresses and simple passwords
+INSERT INTO USERS (password, email, phone_no, address) VALUES ('password1', 'haluk.altunel@example.com', '1234567890', '101 Example Lane');
+INSERT INTO USERS (password, email, phone_no, address) VALUES ('password2', 'john.smith@example.com', '1234567891', '102 Example Lane');
+INSERT INTO USERS (password, email, phone_no, address) VALUES ('password3', 'alex.johnson@example.com', '1234567892', '103 Example Lane');
+INSERT INTO USERS (password, email, phone_no, address) VALUES ('password4', 'samantha.brown@example.com', '1234567893', '104 Example Lane');
+INSERT INTO USERS (password, email, phone_no, address) VALUES ('password5', 'michael.davis@example.com', '1234567894', '105 Example Lane');
