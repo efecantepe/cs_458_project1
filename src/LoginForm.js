@@ -71,7 +71,7 @@ function LoginForm() {
 
     const handleLogin = () => {
         console.log(email, phone, address, password);
-        axios.get(`http://localhost:7000/login?email=${email}&phone=${phone}&address=${address}&password=${password}`)
+        axios.post(`http://localhost:7000/login?email=${email}&phone=${phone}&address=${address}&password=${password}`)
             .then(response => {
                 console.log('Response:', response.data);
                 setLogged(true);
