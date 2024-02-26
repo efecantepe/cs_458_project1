@@ -1,0 +1,15 @@
+[
+    {
+        "email" : "haluk.altunel@example.com",
+        "password" : "password1",
+        "phone_no" : "1234567890",
+        "address" : "101 Example Lane"
+    },
+
+    {
+        "email" : "haluk.altunel@example.com",
+        "password" : "password2",
+        "phone_no" : "1234567890",
+        "address" : "101 Example Lane"
+    }
+]
