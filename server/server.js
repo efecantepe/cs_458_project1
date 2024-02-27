@@ -33,7 +33,8 @@ const queryDB = (sql, params, callback) => {
 };
 
 app.use(express.json())
-app.use(cors())
+app.use(cors());
+
 
 // Set session config
 app.use(session({
@@ -44,7 +45,12 @@ app.use(session({
 }));
 
 app.post('/login', (req, res) => {
-    const { email, password } = req.body;
+
+    const email = req.query.email
+    const password = req.query.password
+
+    console.log(email)
+    console.log(password)
 
     // Using a prepared statement to prevent SQL injection
     const sql = 'SELECT * FROM USERS WHERE email = ?';
