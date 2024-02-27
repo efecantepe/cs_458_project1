@@ -14,3 +14,4 @@ INSERT INTO USERS (password, email, phone_no, address) VALUES ('password2', 'joh
 INSERT INTO USERS (password, email, phone_no, address) VALUES ('password3', 'alex.johnson@example.com', '1234567892', '103 Example Lane');
 INSERT INTO USERS (password, email, phone_no, address) VALUES ('password4', 'samantha.brown@example.com', '1234567893', '104 Example Lane');
 INSERT INTO USERS (password, email, phone_no, address) VALUES ('password5', 'michael.davis@example.com', '1234567894', '105 Example Lane');
+INSERT INTO USERS (password, email, phone_no, address) VALUES ('password6', 'skaancakir@gmail.com', '5055555555', 'Can Dostlar Sitesi');

@@ -33,6 +33,7 @@ const queryDB = (sql, params, callback) => {
 };
 
 app.use(express.json())
+app.use(cors())
 
 // Set session config
 app.use(session({
@@ -69,8 +70,17 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/google', (req, res) => {
-    res.send('google')
-})
+    // Log the email received in the request body
+    console.log('Received email from loginform:', req.body.email);
+
+    // You can perform additional operations here, such as verifying the email or storing it in a database
+
+    // Respond to the client to acknowledge the received data
+    res.json({
+        status: 'success',
+        message: `Received email: ${req.body.email}`
+    });
+});
 
 app.post('/facebook', (req, res) => {
     res.send('facebook')
