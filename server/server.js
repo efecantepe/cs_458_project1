@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 7000
+const port = 4236
 const cors = require('cors')
 const mysql = require('mysql2')
 const session = require('express-session');
@@ -65,7 +65,10 @@ app.post('/login', (req, res) => {
             if (password === user.password) {
                 // Passwords match, create session
                 req.session.user = { email };
-                res.send({ message: "Logged in successfully", authResult: 1 });
+
+                console.log(user)
+
+                res.send({ message: "Logged in successfully", authResult: 1, user: {email : user.email, address: user.address, phone_no: user.phone_no }});
             } else {
                 // Passwords do not match, no session create
                 res.status(401).send({ message: 'Authentication failed', authResult: 0});
