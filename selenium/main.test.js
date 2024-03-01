@@ -40,6 +40,48 @@ describe('Login Input', () => {
   // Additional tests...
 });
 
+describe('SQL injection', () => {
+    let driver;  
+
+    // Set browser driver before all the tests.
+    beforeAll(async () => {
+    // Default value is 'chrome'
+    let driver = await new Builder().forBrowser(Browser.CHROME).build();
+        await driver.navigate('http://localhost:3000/');
+    });
+
+    // After all tests are closed, close the browser driver.
+    afterAll(async () => {
+        await driver.close();
+    });
+
+    test('SQL injection using no creditentials', async () => {
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+
+        expect(emailField).not.toBeNull();
+        expect(passwordField).not.toBeNull();
+        let email = "' OR '1'='1'; DROP TABLE USERS; --";
+        let password = "' OR '1'='1'; DROP TABLE USERS; --";
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+                
+        const button = await driver.findElement(By.name('login_button'));
+        expect(button).not.toBeNull();
+        button.click()
+
+        await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+        
+        // Get the current URL
+        let currentUrl = await driver.getCurrentUrl();
+
+        // Assert the current URL is the expected URL
+        console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}'`);
+    });
+
+  // Additional tests...
+});
+
 async function typeWithAnimation(element, text) {
     const delay = 100; // Adjust the delay (in milliseconds) between each character
     for (const char of text) {
