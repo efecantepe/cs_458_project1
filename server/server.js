@@ -58,18 +58,17 @@ app.post('/login', (req, res) => {
     // Get user passwd for that email and check if the user exists
     queryDB(sql, [email], (results) => {
         if (results.length === 0) {
-            res.status(401).send({ message: 'Authentication failed' });
+            res.status(401).send({ message: 'Authentication failed', authResult: 0});
         } else {
             const user = results[0];
-
             // Direct comparison for plain text passwords (change to bcrypt compare for prod)
             if (password === user.password) {
                 // Passwords match, create session
                 req.session.user = { email };
-                res.send({ message: "Logged in successfully" });
+                res.send({ message: "Logged in successfully", authResult: 1 });
             } else {
                 // Passwords do not match, no session create
-                res.status(401).send({ message: 'Authentication failed' });
+                res.status(401).send({ message: 'Authentication failed', authResult: 0});
             }
         }
     });

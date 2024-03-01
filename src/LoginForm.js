@@ -102,7 +102,9 @@ function LoginForm() {
             <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
             <div id="email_status" hx-get="/get_email_status"></div>
             <br/>
-
+            
+            {
+                /*
             <label htmlFor="phone">Phone Number:</label>
             <input type="tel" id="phone" name="phone" value={phone} onChange={(e) => setPhone(e.target.value)}/>
             <div id="phone_status" hx-get="/get_phone_status"></div>
@@ -112,21 +114,24 @@ function LoginForm() {
             <input id="address" name="address" value={address} onChange={(e) => setAddress(e.target.value)}/>
             <div id="address_status" hx-get="/get_address_status"></div>
             <br/>
+             */
+            }
 
             <label htmlFor="password">Password:</label>
             <input type="password" id="password" name="password" value={password}
                    onChange={(e) => setPassword(e.target.value)}/>
             <div id="password_status" hx-get="/get_password_status"></div>
             <br/>
+           
 
             <div className="row">
-                <button className="button" onClick={handleLogin}>Login</button>
+                <button name='login_button' className="button" onClick={handleLogin}>Login</button>
                 <div className="avatar">
                     <button onClick={handleFacebook} className="icon_button">
                         <img draggable="false" width="30" src="facebook.png" alt="Avatar"/>
                     </button>
                 </div>
-                <div id="googleSignInDiv"></div>
+                <div name="google_button" id="googleSignInDiv"></div>
             </div>
 
             <div id="g_id_onload"
