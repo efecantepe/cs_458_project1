@@ -70,15 +70,46 @@ function LoginForm() {
 
 
     const handleLogin = () => {
-        console.log(email, phone, address, password);
-        axios.post(`http://localhost:7000/login?email=${email}&phone=${phone}&address=${address}&password=${password}`)
+        if((email.length > 50) && (password.length > 30)){
+            alert("Email and Password is too long ")
+            return;
+        }
+
+        else if(email.length > 50){
+            alert("Email is too long")
+            return;
+        }
+
+        
+        else if(password.length > 50){
+            alert("Password is too long")
+            return;
+        }
+
+        else if(email.length === 0 && password.length === 0){
+            alert("Email and Password has to be filled")
+            return;
+        }
+
+        
+        else if(email.length === 0){
+            alert("Email has to be filled")
+            return;
+        }
+
+        else if(password.length === 0){
+            alert("Password has to be filled")
+            return;
+        }
+
+        console.log("reached yoo")
+
+        axios.post(`http://localhost:4236/login?email=${email}&phone=${phone}&address=${address}&password=${password}`)
             .then(response => {
                 console.log('Response:', response.data);
-
                 setAddress(response.data.user.address)
                 setEmail(response.data.user.email)
                 setPhone(response.data.user.phone_no)
-
                 setLogged(true);
             })
             .catch(error => {
@@ -90,7 +121,7 @@ function LoginForm() {
 
     const handleFacebook = () => {
         console.log("Facebook login attempted");
-        axios.get('http://localhost:7000/facebook')
+        axios.get('http://localhost:4236/facebook')
             .then(response => {
                 console.log('Response:', response.data);
             })

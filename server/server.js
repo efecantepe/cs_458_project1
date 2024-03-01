@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 7000
+const port = 4236
 const cors = require('cors')
 const mysql = require('mysql2')
 const session = require('express-session');
