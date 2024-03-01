@@ -2,9 +2,52 @@
 
 
 const sample = require('./sample.json')
+const { Builder, By, Browser, until } = require('selenium-webdriver');
 
-const {Builder, Browser, By, Key, until} = require('selenium-webdriver');
+describe('Login Input', () => {
+    let driver;  
 
+  // Set browser driver before all the tests.
+  beforeAll(async () => {
+    // Default value is 'chrome'
+    let driver = await new Builder().forBrowser(Browser.CHROME).build();
+    await driver.navigate('http://localhost:3000/');
+  });
+
+  // After all tests are closed, close the browser driver.
+  afterAll(async () => {
+    await driver.close();
+  });
+
+  test('Right mail and password', async () => {
+    const emailField = await driver.findElement(By.name('email'));
+    const passwordField = await driver.findElement(By.name('password'));
+
+    expect(emailField !== null).toBeTruthy();
+    let email = "";
+    let password = "";
+    await typeWithAnimation(emailField, email);
+    await typeWithAnimation(passwordField, password);
+            
+    const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+    button.click()
+    
+    await driver.quit()
+    
+    // Add assertions or further actions here
+  });
+
+  // Additional tests...
+});
+
+async function typeWithAnimation(element, text) {
+    const delay = 100; // Adjust the delay (in milliseconds) between each character
+    for (const char of text) {
+        await element.sendKeys(char);
+        await new Promise(resolve => setTimeout(resolve, delay));
+    }
+}
+/*
 (async function example() {
   let driver = await new Builder().forBrowser(Browser.FIREFOX).build();
   let driver1 = await new Builder().forBrowser(Browser.FIREFOX).build();
@@ -133,10 +176,4 @@ async function shortPassword(driver){
 }
 
 
-async function typeWithAnimation(element, text) {
-    const delay = 100; // Adjust the delay (in milliseconds) between each character
-    for (const char of text) {
-        await element.sendKeys(char);
-        await new Promise(resolve => setTimeout(resolve, delay));
-    }
-}
+*/
