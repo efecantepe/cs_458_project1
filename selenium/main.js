@@ -57,9 +57,6 @@ async function test1(driver){
 
         const button = await driver.findElement(By.name('login_button'));
         await button.click();
-    } finally {
-        console.log("Test 1 completed");
-        await driver.quit();
     }
 
 
@@ -101,12 +98,7 @@ async function test2(driver){
 
         const button = await driver.findElement(By.name('login_button'));
         await button.click();
-    } finally {
-        console.log("Test 2 completed");
-        await driver.quit();
-    }
-
-
+    } 
 }
 
 async function test3(driver){
