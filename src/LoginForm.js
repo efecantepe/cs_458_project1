@@ -74,9 +74,15 @@ function LoginForm() {
         axios.post(`http://localhost:7000/login?email=${email}&phone=${phone}&address=${address}&password=${password}`)
             .then(response => {
                 console.log('Response:', response.data);
+
+                setAddress(response.data.user.address)
+                setEmail(response.data.user.email)
+                setPhone(response.data.user.phone_no)
+
                 setLogged(true);
             })
             .catch(error => {
+                alert("Email or Password is false")
                 console.error('Error:', error);
             });
     };
@@ -102,7 +108,7 @@ function LoginForm() {
             <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
             <div id="email_status" hx-get="/get_email_status"></div>
             <br/>
-            
+
             {
                 /*
             <label htmlFor="phone">Phone Number:</label>
