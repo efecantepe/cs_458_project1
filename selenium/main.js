@@ -48,6 +48,8 @@ async function test1(driver){
                 
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
         button.click()
+        
+        await driver.quit()
     }
 
     finally{
@@ -82,6 +84,10 @@ async function test2(driver){
                 
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
         button.click()
+        await driver.quit()
+    }
+    catch(e){
+        await driver.quit()
     }
 
     finally{
@@ -95,6 +101,7 @@ async function test3(driver){
     await driver.get('http://localhost:3000/');
     const button = await driver.findElement(By.name('google_button')); // Replace 'button_name' with the name attribute of the button
     button.click()
+    
 }
 
 async function typeWithAnimation(element, text) {
