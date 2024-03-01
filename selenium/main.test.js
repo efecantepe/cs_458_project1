@@ -1,6 +1,3 @@
-
-
-
 const sample = require('./sample.json')
 const { Builder, By, Browser, until } = require('selenium-webdriver');
 
@@ -9,7 +6,6 @@ describe('Login Input', () => {
 
   // Set browser driver before all the tests.
   beforeAll(async () => {
-    // Default value is 'chrome'
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     await driver.navigate('http://localhost:3000/');
   });
@@ -24,18 +20,22 @@ describe('Login Input', () => {
     const passwordField = await driver.findElement(By.name('password'));
 
     expect(emailField !== null).toBeTruthy();
+    expect(passwordField !== null).toBeTruthy();
+    
     let email = "";
     let password = "";
+    
     await typeWithAnimation(emailField, email);
     await typeWithAnimation(passwordField, password);
             
     const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
     button.click()
-    
-    await driver.quit()
-    
-    // Add assertions or further actions here
-  });
+
+    await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+        
+    let currentUrl = await driver.getCurrentUrl();
+    console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`);
+});
 
   // Additional tests...
 });
