@@ -54,6 +54,12 @@ async function test1(driver){
 
     finally{
         console.log("Tests Passed")
+
+        const button = await driver.findElement(By.name('login_button'));
+        await button.click();
+    } finally {
+        console.log("Test 1 completed");
+        await driver.quit();
     }
 
 
@@ -92,6 +98,12 @@ async function test2(driver){
 
     finally{
         console.log("Tests Passed")
+
+        const button = await driver.findElement(By.name('login_button'));
+        await button.click();
+    } finally {
+        console.log("Test 2 completed");
+        await driver.quit();
     }
 
 
@@ -103,6 +115,31 @@ async function test3(driver){
     button.click()
     
 }
+async function unallowedCharacterForEmail(driver) {
+    try {
+        await driver.get('http://localhost:3000/');
+        const button = await driver.findElement(By.name('google_button'));
+        await button.click();
+    } finally {
+        console.log("Test 3 completed");
+        await driver.quit();
+    }
+}
+
+async function unallowedCharacterForPassword(driver) {
+
+
+}
+
+async function invalidEmail(driver){
+
+
+}
+
+async function shortPassword(driver){
+
+}
+
 
 async function typeWithAnimation(element, text) {
     const delay = 100; // Adjust the delay (in milliseconds) between each character
