@@ -1,7 +1,9 @@
 const { assert } = require('console');
 const sample = require('./sample.json')
-const { Builder, By, Browser, until } = require('selenium-webdriver');
+const { Builder, By, Browser, until, Options } = require('selenium-webdriver');
 const { func } = require('prop-types');
+const chrome = require('selenium-webdriver/chrome');
+const { UserPromptHandler } = require('selenium-webdriver/lib/capabilities');
 
 
 jest.setTimeout(2147483647)
@@ -291,21 +293,30 @@ async function typeWithAnimation(element, text) {
 
 
 describe('SQL injection', () => {
+    let options;
+    beforeAll(async () => {
+        options = new chrome.Options();
+        // Set the behavior to ignore unexpected alerts
+        options.setAlertBehavior(UserPromptHandler.DISMISS);
+        options.addArguments('disable-infobars');
+        options.setUserPreferences({ 'profile.default_content_setting_values.notifications': 2 });
+    });
 
-    test('SQL injection using no creditentials', async () => {
+    test('SQL injection for creating a new user without any creditentials', async () => {
         let driver;
+        let driver2
         try{
-            driver = await new Builder().forBrowser(Browser.CHROME).build();
+            driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
             await driver.get('http://localhost:3000/');
             const emailField = await driver.findElement(By.name('email'));
             const passwordField = await driver.findElement(By.name('password'));
 
             expect(emailField).not.toBeNull();
             expect(passwordField).not.toBeNull();
-            const fakePassword = generateRandomPassword(10); // 10-character password
-            const fakeEmail = generateRandomEmail(7); // 15-character email (7 for the body + 8 for "@example.com")
-            const fakeAddr = generateRandomString(20); // 20-character string
-            let email = "' OR '1'='1'; INSERT INTO USERS (password, email, phone_no, address) VALUES ('"+fakePassword+"', '"+fakeEmail+"', '1234567890', '"+fakeAddr+"'); --"; //No Mail
+            const fakePassword = generateRandomPassword(3);
+            const fakeEmail = generateRandomEmail(3);
+            const fakeAddr = generateRandomString(2);
+            let email = "' OR '1'='1'; INSERT INTO USERS (password, email, phone_no, address) VALUES ('"+fakePassword+"', '"+fakeEmail+"', '1', '"+fakeAddr+"'); --"; //No Mail
             let password = "' OR '1'='1; --"; //No Password
             await emailField.sendKeys(email);
             await passwordField.sendKeys(password);
@@ -315,20 +326,18 @@ describe('SQL injection', () => {
             await button.click();
             
             //If injection worked, then the user with random genarated user will be in the db.
-            driver.close();
-
-            driver = await new Builder().forBrowser(Browser.CHROME).build();
-            await driver.get('http://localhost:3000/');
-            const emailField2 = await driver.findElement(By.name('email'));
-            const passwordField2 = await driver.findElement(By.name('password'));
+            driver2 = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
+            await driver2.get('http://localhost:3000/');
+            const emailField2 = await driver2.findElement(By.name('email'));
+            const passwordField2 = await driver2.findElement(By.name('password'));
             await emailField2.sendKeys(fakeEmail);
-            await passwordField2.sendKeys("1234567890");
-            const button2 = await driver.findElement(By.name('login_button'));
+            await passwordField2.sendKeys(fakePassword);
+            const button2 = await driver2.findElement(By.name('login_button'));
             expect(button2).not.toBeNull();
             await button2.click();
-            await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
-            let currentUrl = await driver.getCurrentUrl();
-            expect(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`).toBeFalsy();
+            await driver2.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+            let currentUrl = await driver2.getCurrentUrl();
+            expect(currentUrl === 'http://localhost:3000/mainPage').toBeFalsy();
         }
         catch (error) {
             console.error('Test failed', error);
@@ -336,11 +345,15 @@ describe('SQL injection', () => {
             if (driver) {
                 await driver.quit(); // Ensure the driver is closed even if the test fails.
             }
+            if(driver2){
+                await driver2.quit()
+            }
         }
     });
 
-    test('SQL injection using right creditentials', async () => {
+    test('SQL injection DROP TABLES using right creditentials', async () => {
         let driver;
+        let driver2;
         try{
             driver = await new Builder().forBrowser(Browser.CHROME).build();
             await driver.get('http://localhost:3000/');
@@ -358,19 +371,27 @@ describe('SQL injection', () => {
             expect(button).not.toBeNull();
             await button.click()
 
-            await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
-            
-            // Get the current URL
-            let currentUrl = await driver.getCurrentUrl();
-
-            // Assert the current URL is the expected URL
-            assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL not to be 'http://localhost:3000/mainPage' but was '${currentUrl}'`).not();
+            driver2 = await new Builder().forBrowser(Browser.CHROME).build();
+            await driver2.get('http://localhost:3000/');
+            const emailField2 = await driver2.findElement(By.name('email'));
+            const passwordField2 = await driver2.findElement(By.name('password'));
+            await emailField2.sendKeys("haluk.altunel@example.com");
+            await passwordField2.sendKeys("password1");
+            const button2 = await driver2.findElement(By.name('login_button'));
+            expect(button2).not.toBeNull();
+            await button2.click();
+            await driver2.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+            let currentUrl = await driver2.getCurrentUrl();
+            expect(currentUrl === 'http://localhost:3000/mainPage').toBeTruthy();
         }
         catch (error) {
             console.error('Test failed', error);
         } finally {
             if (driver) {
                 await driver.quit(); // Ensure the driver is closed even if the test fails.
+            }
+            if(driver2){
+                await driver2.quit()
             }
         }
     });
