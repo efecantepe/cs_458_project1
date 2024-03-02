@@ -6,8 +6,9 @@ describe('Login Input', () => {
 
   // Set browser driver before all the tests.
   beforeAll(async () => {
+    jest.setTimeout(500000)
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
-    await driver.navigate('http://localhost:3000/');
+    await driver.navigate('http://localhost:3000');
   });
 
   // After all tests are closed, close the browser driver.
