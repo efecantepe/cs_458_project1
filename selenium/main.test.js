@@ -302,22 +302,33 @@ describe('SQL injection', () => {
 
             expect(emailField).not.toBeNull();
             expect(passwordField).not.toBeNull();
-            let email = "' OR '1'='1'; DROP TABLE USERS; --"; //No Mail
-            let password = "' OR '1'='1'; DROP TABLE USERS; --"; //No Password
+            const fakePassword = generateRandomPassword(10); // 10-character password
+            const fakeEmail = generateRandomEmail(7); // 15-character email (7 for the body + 8 for "@example.com")
+            const fakeAddr = generateRandomString(20); // 20-character string
+            let email = "' OR '1'='1'; INSERT INTO USERS (password, email, phone_no, address) VALUES ('"+fakePassword+"', '"+fakeEmail+"', '1234567890', '"+fakeAddr+"'); --"; //No Mail
+            let password = "' OR '1'='1; --"; //No Password
             await emailField.sendKeys(email);
             await passwordField.sendKeys(password);
                     
             const button = await driver.findElement(By.name('login_button'));
             expect(button).not.toBeNull();
-            await button.click()
-
-            await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+            await button.click();
             
-            // Get the current URL
-            let currentUrl = await driver.getCurrentUrl();
+            //If injection worked, then the user with random genarated user will be in the db.
+            driver.close();
 
-            // Assert the current URL is the expected URL
-            assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL not to be 'http://localhost:3000/mainPage' but was '${currentUrl}'`).not();
+            driver = await new Builder().forBrowser(Browser.CHROME).build();
+            await driver.get('http://localhost:3000/');
+            const emailField2 = await driver.findElement(By.name('email'));
+            const passwordField2 = await driver.findElement(By.name('password'));
+            await emailField2.sendKeys(fakeEmail);
+            await passwordField2.sendKeys("1234567890");
+            const button2 = await driver.findElement(By.name('login_button'));
+            expect(button2).not.toBeNull();
+            await button2.click();
+            await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+            let currentUrl = await driver.getCurrentUrl();
+            expect(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`).toBeFalsy();
         }
         catch (error) {
             console.error('Test failed', error);
@@ -401,134 +412,29 @@ describe('SQL injection', () => {
     
 });
 
-
-/*
-(async function example() {
-  let driver = await new Builder().forBrowser(Browser.FIREFOX).build();
-  let driver1 = await new Builder().forBrowser(Browser.FIREFOX).build();
-  let driver2 = await new Builder().forBrowser(Browser.FIREFOX).build();  
-
-  await test1(driver)
-  await test2(driver1)
-  await test3(driver2)
-  
-//   try {
-//     await driver.get('http://localhost:3000/');
-//     await driver.findElement(By.name('q')).sendKeys('webdriver', Key.RETURN);
-//     await driver.wait(until.titleIs('webdriver - Google Search'), 1000);
-//   } finally {
-//     console.log("SD")
-//   }
-})();
-
-async function test1(driver){
-
-    let email = sample[0].email
-    let password = sample[0].password
-    let phone = sample[0].phone_no
-    let address = sample[0].address
-
-    console.log(sample[0])
-
-    try {
-        await driver.get('http://localhost:3000/');
-        const emailField = await driver.findElement(By.name('email'));
-        await emailField.sendKeys(email);
-
-        const passwordField = await driver.findElement(By.name('password'));
-        await passwordField.sendKeys(password);
-
-        const phoneField = await driver.findElement(By.name('phone'));
-        await typeWithAnimation(phoneField, phone);
-
-        const addressField = await driver.findElement(By.name('address'));
-        await typeWithAnimation(addressField, address);
-                
-        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-        button.click()
-        
-        await driver.quit()
+function generateRandomPassword(length) {
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+        password += charset.charAt(Math.floor(Math.random() * charset.length));
     }
+    return password;
+}
 
-    finally{
-        console.log("Tests Passed")
-
-        const button = await driver.findElement(By.name('login_button'));
-        await button.click();
+function generateRandomEmail(bodyLength) {
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+    let emailBody = "";
+    for (let i = 0; i < bodyLength; i++) {
+        emailBody += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-
-
+    return emailBody + "@example.com";
 }
 
-async function test2(driver){
-
-    let email = sample[1].email
-    let password = sample[1].password
-    let phone = sample[1].phone_no
-    let address = sample[1].address
-
-    console.log(sample[0])
-
-    try {
-        await driver.get('http://localhost:3000/');
-        const emailField = await driver.findElement(By.name('email'));
-        await emailField.sendKeys(email);
-
-        const passwordField = await driver.findElement(By.name('password'));
-        await passwordField.sendKeys(password);
-
-        const phoneField = await driver.findElement(By.name('phone'));
-        await typeWithAnimation(phoneField, phone);
-
-        const addressField = await driver.findElement(By.name('address'));
-        await typeWithAnimation(addressField, address);
-                
-        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-        button.click()
-        await driver.quit()
+function generateRandomString(length) {
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let randomString = "";
+    for (let i = 0; i < length; i++) {
+        randomString += charset.charAt(Math.floor(Math.random() * charset.length));
     }
-    catch(e){
-        await driver.quit()
-    }
-
-    finally{
-        console.log("Tests Passed")
-
-        const button = await driver.findElement(By.name('login_button'));
-        await button.click();
-    } 
+    return randomString;
 }
-
-async function test3(driver){
-    await driver.get('http://localhost:3000/');
-    const button = await driver.findElement(By.name('google_button')); // Replace 'button_name' with the name attribute of the button
-    button.click()
-    
-}
-async function unallowedCharacterForEmail(driver) {
-    try {
-        await driver.get('http://localhost:3000/');
-        const button = await driver.findElement(By.name('google_button'));
-        await button.click();
-    } finally {
-        console.log("Test 3 completed");
-        await driver.quit();
-    }
-}
-
-async function unallowedCharacterForPassword(driver) {
-
-
-}
-
-async function invalidEmail(driver){
-
-
-}
-
-async function shortPassword(driver){
-
-}
-
-
-*/
