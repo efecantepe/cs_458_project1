@@ -1,0 +1,45 @@
+[
+    {
+        "email" : "haluk.altunel@example.com",
+        "password" : "password1"
+    },
+
+    {
+        "email" : "haluk.altunel@example.com",
+        "password" : "password2"
+    },
+
+    {
+        "email" : "haluk.altunelhaluk.altunelhaluk.altunelhaluk.altunel@example.com",
+        "password" : "password2password2password2password2password2password2"
+    },
+
+    {
+        "email" : "haluk.altunelhaluk.altunelhaluk.altunelhaluk.altunel@example.com",
+        "password" : "password2"
+    },
+
+
+    {
+        "email" : "haluk.altunel@example.com",
+        "password" : "password2password2password2pass"
+    },
+
+    {
+        "email" : "",
+        "password" : "password1"
+    },
+
+    {
+        "email" : "haluk.altunel@example.com",
+        "password" : ""
+    },
+
+    {
+        "email" : "",
+        "password" : ""
+    }    
+
+
+
+]

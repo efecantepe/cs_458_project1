@@ -70,13 +70,37 @@ function LoginForm() {
 
 
     const handleLogin = () => {
-        console.log(email, phone, address, password);
-        axios.post(`http://localhost:7000/login?email=${email}&phone=${phone}&address=${address}&password=${password}`)
+        if((email.length > 50) && (password.length > 30)){
+            alert("Email and Password is too long")
+            return;
+        }
+
+        else if(email.length > 50){
+            alert("Email is too long")
+            return;
+        }
+
+        
+        else if(password.length > 30){
+            alert("Password is too long")
+            return;
+        }
+
+        else if(email.length === 0 || password.length === 0){
+            alert("Email or Password cannot be empty")
+            return;
+        }
+
+        axios.post(`http://localhost:4236/login?email=${email}&phone=${phone}&address=${address}&password=${password}`)
             .then(response => {
                 console.log('Response:', response.data);
+                setAddress(response.data.user.address)
+                setEmail(response.data.user.email)
+                setPhone(response.data.user.phone_no)
                 setLogged(true);
             })
             .catch(error => {
+                alert("Email or Password is false")
                 console.error('Error:', error);
             });
     };
@@ -84,7 +108,7 @@ function LoginForm() {
 
     const handleFacebook = () => {
         console.log("Facebook login attempted");
-        axios.get('http://localhost:7000/facebook')
+        axios.get('http://localhost:4236/facebook')
             .then(response => {
                 console.log('Response:', response.data);
             })
@@ -103,6 +127,8 @@ function LoginForm() {
             <div id="email_status" hx-get="/get_email_status"></div>
             <br/>
 
+            {
+                /*
             <label htmlFor="phone">Phone Number:</label>
             <input type="tel" id="phone" name="phone" value={phone} onChange={(e) => setPhone(e.target.value)}/>
             <div id="phone_status" hx-get="/get_phone_status"></div>
@@ -112,21 +138,24 @@ function LoginForm() {
             <input id="address" name="address" value={address} onChange={(e) => setAddress(e.target.value)}/>
             <div id="address_status" hx-get="/get_address_status"></div>
             <br/>
+             */
+            }
 
             <label htmlFor="password">Password:</label>
             <input type="password" id="password" name="password" value={password}
                    onChange={(e) => setPassword(e.target.value)}/>
             <div id="password_status" hx-get="/get_password_status"></div>
             <br/>
+           
 
             <div className="row">
-                <button className="button" onClick={handleLogin}>Login</button>
+                <button name='login_button' className="button" onClick={handleLogin}>Login</button>
                 <div className="avatar">
                     <button onClick={handleFacebook} className="icon_button">
                         <img draggable="false" width="30" src="facebook.png" alt="Avatar"/>
                     </button>
                 </div>
-                <div id="googleSignInDiv"></div>
+                <div name="google_button" id="googleSignInDiv"></div>
             </div>
 
             <div id="g_id_onload"
