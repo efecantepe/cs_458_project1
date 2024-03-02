@@ -71,7 +71,7 @@ function LoginForm() {
 
     const handleLogin = () => {
         if((email.length > 50) && (password.length > 30)){
-            alert("Email and Password is too long ")
+            alert("Email and Password is too long")
             return;
         }
 
@@ -81,28 +81,15 @@ function LoginForm() {
         }
 
         
-        else if(password.length > 50){
+        else if(password.length > 30){
             alert("Password is too long")
             return;
         }
 
-        else if(email.length === 0 && password.length === 0){
-            alert("Email and Password has to be filled")
+        else if(email.length === 0 || password.length === 0){
+            alert("Email or Password cannot be empty")
             return;
         }
-
-        
-        else if(email.length === 0){
-            alert("Email has to be filled")
-            return;
-        }
-
-        else if(password.length === 0){
-            alert("Password has to be filled")
-            return;
-        }
-
-        console.log("reached yoo")
 
         axios.post(`http://localhost:4236/login?email=${email}&phone=${phone}&address=${address}&password=${password}`)
             .then(response => {
