@@ -25,7 +25,7 @@
     "start": "react-scripts start",
     "start-server": "docker-compose up -d && cd server && nodemon ./server.js",
     "build": "react-scripts build",
-    "test": "jest",
+    "test": "jest ./selenium/main.test.js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

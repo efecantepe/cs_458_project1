@@ -1,3 +1,4 @@
+const { assert } = require('console');
 const sample = require('./sample.json')
 const { Builder, By, Browser, until } = require('selenium-webdriver');
 
@@ -17,6 +18,8 @@ describe('Login Input', () => {
   });
 
   test('Right mail and password', async () => {
+    driver = await new Builder().forBrowser(Browser.CHROME).build();
+    await driver.get('http://localhost:3000/');
     const emailField = await driver.findElement(By.name('email'));
     const passwordField = await driver.findElement(By.name('password'));
 
@@ -46,9 +49,9 @@ describe('SQL injection', () => {
 
     // Set browser driver before all the tests.
     beforeAll(async () => {
-    // Default value is 'chrome'
-    let driver = await new Builder().forBrowser(Browser.CHROME).build();
-        await driver.navigate('http://localhost:3000/');
+        // Default value is 'chrome'
+        //let driver = await new Builder().forBrowser(Browser.CHROME).build();
+        //await driver.navigate('http://localhost:3000/');
     });
 
     // After all tests are closed, close the browser driver.
@@ -57,19 +60,48 @@ describe('SQL injection', () => {
     });
 
     test('SQL injection using no creditentials', async () => {
+        driver = await new Builder().forBrowser(Browser.CHROME).build();
+        await driver.get('http://localhost:3000/');
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
 
         expect(emailField).not.toBeNull();
         expect(passwordField).not.toBeNull();
-        let email = "' OR '1'='1'; DROP TABLE USERS; --";
-        let password = "' OR '1'='1'; DROP TABLE USERS; --";
+        let email = "' OR '1'='1'; DROP TABLE USERS; --"; //No Mail
+        let password = "' OR '1'='1'; DROP TABLE USERS; --"; //No Password
         await typeWithAnimation(emailField, email);
         await typeWithAnimation(passwordField, password);
                 
         const button = await driver.findElement(By.name('login_button'));
         expect(button).not.toBeNull();
-        button.click()
+        await button.click()
+
+        await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+        
+        // Get the current URL
+        let currentUrl = await driver.getCurrentUrl();
+
+        // Assert the current URL is the expected URL
+        assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}'`);
+        await driver.close()
+    });
+
+    test('SQL injection using right creditentials', async () => {
+        driver = await new Builder().forBrowser(Browser.CHROME).build();
+        await driver.get('http://localhost:3000/');
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+
+        expect(emailField).not.toBeNull();
+        expect(passwordField).not.toBeNull();
+        let email = "haluk.altunel@example.com' OR '1'='1'; DROP TABLE USERS; --"; //Right Mail
+        let password = "password1' OR '1'='1'; DROP TABLE USERS; --"; //Right Password
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+                
+        const button = await driver.findElement(By.name('login_button'));
+        expect(button).not.toBeNull();
+        await button.click()
 
         await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
         
@@ -78,9 +110,35 @@ describe('SQL injection', () => {
 
         // Assert the current URL is the expected URL
         console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}'`);
+        await driver.close()
     });
 
-  // Additional tests...
+    test('SQL injection using wrong creditentials', async () => {
+        driver = await new Builder().forBrowser(Browser.CHROME).build();
+        await driver.get('http://localhost:3000/');
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+
+        expect(emailField).not.toBeNull();
+        expect(passwordField).not.toBeNull();
+        let email = "haluk.altunel@example.com' OR '1'='1'; DROP TABLE USERS; --"; //Right Mail
+        let password = "password5' OR '1'='1'; DROP TABLE USERS; --"; //Wrong Password
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+                
+        const button = await driver.findElement(By.name('login_button'));
+        expect(button).not.toBeNull();
+        await button.click()
+
+        await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+        
+        // Get the current URL
+        let currentUrl = await driver.getCurrentUrl();
+
+        // Assert the current URL is the expected URL
+        console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}'`);
+        await driver.close()
+    });
 });
 
 async function typeWithAnimation(element, text) {
