@@ -1,6 +1,6 @@
 const { assert } = require('console');
 const sample = require('./sample.json')
-const { Builder, By, Browser, until, Options } = require('selenium-webdriver');
+const { Builder, By, Browser, until, Options, Key } = require('selenium-webdriver');
 const { func } = require('prop-types');
 const chrome = require('selenium-webdriver/chrome');
 const { UserPromptHandler } = require('selenium-webdriver/lib/capabilities');
@@ -277,21 +277,6 @@ describe('Login Input', () => {
   // Additional tests...
 });
 
-async function sleep(seconds) {
-    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
-  }
-  
-
-async function typeWithAnimation(element, text) {
-    const delay = 1; // Adjust the delay (in milliseconds) between each character
-    for (const char of text) {
-        await element.sendKeys(char);
-        await new Promise(resolve => setTimeout(resolve, delay));
-    }
-}
-
-
-
 describe('SQL injection', () => {
     let options;
     beforeAll(async () => {
@@ -433,6 +418,185 @@ describe('SQL injection', () => {
     
 });
 
+describe('XSS Injections', () => {
+    test('XSS injection using script fields', async () => {
+        let driver;
+        try{
+            driver = await new Builder().forBrowser(Browser.CHROME).build();
+            await driver.get('http://localhost:3000/');
+            const emailField = await driver.findElement(By.name('email'));
+            const passwordField = await driver.findElement(By.name('password'));
+
+            expect(emailField).not.toBeNull();
+            expect(passwordField).not.toBeNull();
+            await emailField.sendKeys(`<script>alert('XSS')</script>`, Key.RETURN);
+            await passwordField.sendKeys("password");
+                    
+            const button = await driver.findElement(By.name('login_button'));
+            expect(button).not.toBeNull();
+            await button.click()
+
+            //Wait for the alert
+            await driver.wait(until.alertIsPresent(), 2000);
+            // Attempt to switch to the alert
+            let alert = await driver.switchTo().alert();
+            let alertText = await alert.getText();
+            
+            expect(alertText !== "XSS").toBeTruthy();
+
+        }
+        catch(error){
+            console.error('Test failed', error);
+            throw error;
+        }
+        finally{
+            if(driver){
+                driver.quit();
+            }
+        }
+    })
+    test('XSS injection using image onerror', async () => {
+        let driver;
+        try{
+            driver = await new Builder().forBrowser(Browser.CHROME).build();
+            await driver.get('http://localhost:3000/');
+            const emailField = await driver.findElement(By.name('email'));
+            const passwordField = await driver.findElement(By.name('password'));
+
+            expect(emailField).not.toBeNull();
+            expect(passwordField).not.toBeNull();
+            await emailField.sendKeys(`<img src="invalid" onerror="alert('XSS via image onerror')">`, Key.RETURN);
+            await passwordField.sendKeys("password");
+                    
+            const button = await driver.findElement(By.name('login_button'));
+            expect(button).not.toBeNull();
+            await button.click()
+
+            //Wait for the alert
+            await driver.wait(until.alertIsPresent(), 2000);
+            // Attempt to switch to the alert
+            let alert = await driver.switchTo().alert();
+            let alertText = await alert.getText();
+            
+            expect(alertText !== "XSS via image onerror").toBeTruthy();
+
+        }
+        catch(error){
+            throw error;
+        }
+        finally{
+            if(driver){
+                driver.quit();
+            }
+        }
+    })
+    test('XSS injection using CSS import', async () => {
+        let driver;
+        try{
+            driver = await new Builder().forBrowser(Browser.CHROME).build();
+            await driver.get('http://localhost:3000/');
+            const emailField = await driver.findElement(By.name('email'));
+            const passwordField = await driver.findElement(By.name('password'));
+
+            expect(emailField).not.toBeNull();
+            expect(passwordField).not.toBeNull();
+            await emailField.sendKeys(`<style>@import 'javascript:alert("XSS via CSS import")';</style>`, Key.RETURN);
+            await passwordField.sendKeys("password");
+                    
+            const button = await driver.findElement(By.name('login_button'));
+            expect(button).not.toBeNull();
+            await button.click()
+
+            //Wait for the alert
+            await driver.wait(until.alertIsPresent(), 2000);
+            // Attempt to switch to the alert
+            let alert = await driver.switchTo().alert();
+            let alertText = await alert.getText();
+            
+            expect(alertText !== "XSS via CSS import").toBeTruthy();
+
+        }
+        catch(error){
+            throw error;
+        }
+        finally{
+            if(driver){
+                driver.quit();
+            }
+        }
+    })
+    test('XSS injection using HTML injection', async () => {
+        let driver;
+        try{
+            driver = await new Builder().forBrowser(Browser.CHROME).build();
+            await driver.get('http://localhost:3000/');
+            const emailField = await driver.findElement(By.name('email'));
+            const passwordField = await driver.findElement(By.name('password'));
+
+            expect(emailField).not.toBeNull();
+            expect(passwordField).not.toBeNull();
+            await emailField.sendKeys(`<b onmouseover=alert('XSS via HTML')>Hover over me!</b>`, Key.RETURN);
+            await passwordField.sendKeys("password");
+                    
+            const button = await driver.findElement(By.name('login_button'));
+            expect(button).not.toBeNull();
+            await button.click()
+
+            //Wait for the alert
+            await driver.wait(until.alertIsPresent(), 2000);
+            // Attempt to switch to the alert
+            let alert = await driver.switchTo().alert();
+            let alertText = await alert.getText();
+            
+            expect(alertText !== "XSS via HTML").toBeTruthy();
+
+        }
+        catch(error){
+            throw error;
+        }
+        finally{
+            if(driver){
+                driver.quit();
+            }
+        }
+    })
+    test('XSS injection using SVG onload', async () => {
+        let driver;
+        try{
+            driver = await new Builder().forBrowser(Browser.CHROME).build();
+            await driver.get('http://localhost:3000/');
+            const emailField = await driver.findElement(By.name('email'));
+            const passwordField = await driver.findElement(By.name('password'));
+
+            expect(emailField).not.toBeNull();
+            expect(passwordField).not.toBeNull();
+            await emailField.sendKeys(`<svg xmlns="http://www.w3.org/2000/svg" onload="alert('XSS via SVG onload')"></svg>`, Key.RETURN);
+            await passwordField.sendKeys("password");
+                    
+            const button = await driver.findElement(By.name('login_button'));
+            expect(button).not.toBeNull();
+            await button.click()
+
+            //Wait for the alert
+            await driver.wait(until.alertIsPresent(), 2000);
+            // Attempt to switch to the alert
+            let alert = await driver.switchTo().alert();
+            let alertText = await alert.getText();
+            
+            expect(alertText !== "XSS via SVG onload").toBeTruthy();
+
+        }
+        catch(error){
+            throw error;
+        }
+        finally{
+            if(driver){
+                driver.quit();
+            }
+        }
+    })
+});
+
 function generateRandomPassword(length) {
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
     let password = "";
@@ -459,3 +623,17 @@ function generateRandomString(length) {
     }
     return randomString;
 }
+
+async function sleep(seconds) {
+    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+  }
+  
+
+async function typeWithAnimation(element, text) {
+    const delay = 1; // Adjust the delay (in milliseconds) between each character
+    for (const char of text) {
+        await element.sendKeys(char);
+        await new Promise(resolve => setTimeout(resolve, delay));
+    }
+}
+
