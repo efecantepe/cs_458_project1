@@ -1,24 +1,28 @@
 const { assert } = require('console');
 const sample = require('./sample.json')
 const { Builder, By, Browser, until } = require('selenium-webdriver');
+const { func } = require('prop-types');
+
+
+jest.setTimeout(2147483647)
 
 describe('Login Input', () => {
     let driver;  
 
   // Set browser driver before all the tests.
   beforeAll(async () => {
-    jest.setTimeout(500000)
-    let driver = await new Builder().forBrowser(Browser.CHROME).build();
-    await driver.navigate('http://localhost:3000');
+    // jest.setTimeout(5000000)
+    //let driver = await new Builder().forBrowser(Browser.CHROME).build();
+    //await driver.navigate('http://localhost:3000');
   });
 
   // After all tests are closed, close the browser driver.
   afterAll(async () => {
-    await driver.close();
+    
   });
 
   test('Right mail and password', async () => {
-    driver = await new Builder().forBrowser(Browser.CHROME).build();
+    const driver = await new Builder().forBrowser(Browser.CHROME).build();
     await driver.get('http://localhost:3000/');
     const emailField = await driver.findElement(By.name('email'));
     const passwordField = await driver.findElement(By.name('password'));
@@ -26,8 +30,8 @@ describe('Login Input', () => {
     expect(emailField !== null).toBeTruthy();
     expect(passwordField !== null).toBeTruthy();
     
-    let email = "";
-    let password = "";
+    let email = sample[0].email;
+    let password = sample[0].password;
     
     await typeWithAnimation(emailField, email);
     await typeWithAnimation(passwordField, password);
@@ -39,10 +43,252 @@ describe('Login Input', () => {
         
     let currentUrl = await driver.getCurrentUrl();
     console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`);
+
+
 });
+
+    test("Email Password Dont Match", async () => {
+
+        const driver = await new Builder().forBrowser(Browser.CHROME).build()
+        await driver.get('http://localhost:3000/')
+
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+        
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+
+        let email = sample[1].email;
+        let password = sample[1].password
+
+        console.log(email, " ", password)
+
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        
+        await button.click()
+
+        await sleep(3)
+
+        await driver.switchTo().alert().then(
+            function(alert) {
+                alert.getText().then(function(alertText){
+                    expect(alertText === 'Email or Password is false').toBeTruthy()
+                })
+            }
+        )
+
+    })
+
+    test("Long Email More Than 50 characters - Long Password More Than 30 Characters", async () => {
+
+        const driver = await new Builder().forBrowser(Browser.CHROME).build()
+        await driver.get('http://localhost:3000/')
+
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+        
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+
+        let email = sample[2].email;
+        let password = sample[2].password
+
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        
+        await button.click()
+
+        await driver.switchTo().alert().then(
+            function(alert) {
+                alert.getText().then(function(alertText){
+                    expect(alertText === 'Email and Password is too long').toBeTruthy()
+                })
+            }
+        )
+
+
+    })
+
+    test("Long Email More Than 50 characters", async () => {
+
+        const driver = await new Builder().forBrowser(Browser.CHROME).build()
+        await driver.get('http://localhost:3000/')
+
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+        
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+
+        let email = sample[3].email;
+        let password = sample[3].password
+
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        
+        await button.click()
+
+        await driver.switchTo().alert().then(
+            function(alert) {
+                alert.getText().then(function(alertText){
+                    expect(alertText === 'Email is too long').toBeTruthy()
+                })
+            }
+        )
+
+    })
+
+    test("Long Password More Than 30 characters", async () => {
+
+        const driver = await new Builder().forBrowser(Browser.CHROME).build()
+        await driver.get('http://localhost:3000/')
+
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+        
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+
+        let email = sample[4].email;
+        let password = sample[4].password
+
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        
+        await button.click()
+
+        await driver.switchTo().alert().then(
+            function(alert) {
+                alert.getText().then(function(alertText){
+                    expect(alertText === 'Password is too long').toBeTruthy()
+                })
+            }
+        )
+
+
+    })
+
+    test("Empty Email", async () => {
+
+        const driver = await new Builder().forBrowser(Browser.CHROME).build()
+        await driver.get('http://localhost:3000/')
+
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+        
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+
+        let email = sample[5].email;
+        let password = sample[5].password
+
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        
+        await button.click()
+
+        await driver.switchTo().alert().then(
+            function(alert) {
+                alert.getText().then(function(alertText){
+                    expect(alertText === 'Email or Password cannot be empty').toBeTruthy()
+                })
+            }
+        )
+
+    })
+
+    test("Empty Password", async () => {
+
+        const driver = await new Builder().forBrowser(Browser.CHROME).build()
+        await driver.get('http://localhost:3000/')
+
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+        
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+
+        let email = sample[5].email;
+        let password = sample[5].password
+
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        
+        await button.click()
+
+        await driver.switchTo().alert().then(
+            function(alert) {
+                alert.getText().then(function(alertText){
+                    expect(alertText === 'Email or Password cannot be empty').toBeTruthy()
+                })
+            }
+        )
+
+    })
+
+    test("Empty Email Empty Password", async () => {
+
+        const driver = await new Builder().forBrowser(Browser.CHROME).build()
+        await driver.get('http://localhost:3000/')
+
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+        
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+
+        let email = sample[6].email;
+        let password = sample[6].password
+
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        
+        await button.click()
+
+        await driver.switchTo().alert().then(
+            function(alert) {
+                alert.getText().then(function(alertText){
+                    expect(alertText === 'Email or Password cannot be empty').toBeTruthy()
+                })
+            }
+        )
+    })
+
+
+
 
   // Additional tests...
 });
+
+async function sleep(seconds) {
+    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+  }
+  
+
+async function typeWithAnimation(element, text) {
+    const delay = 1; // Adjust the delay (in milliseconds) between each character
+    for (const char of text) {
+        await element.sendKeys(char);
+        await new Promise(resolve => setTimeout(resolve, delay));
+    }
+}
+
+
 
 describe('SQL injection', () => {
     let driver;  
@@ -141,13 +387,7 @@ describe('SQL injection', () => {
     });
 });
 
-async function typeWithAnimation(element, text) {
-    const delay = 100; // Adjust the delay (in milliseconds) between each character
-    for (const char of text) {
-        await element.sendKeys(char);
-        await new Promise(resolve => setTimeout(resolve, delay));
-    }
-}
+
 /*
 (async function example() {
   let driver = await new Builder().forBrowser(Browser.FIREFOX).build();
