@@ -78,7 +78,19 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/google', (req, res) => {
-    res.send('google')
+    const email = req.query.email
+    console.log(email)
+    const sql = 'SELECT * FROM GOOGLE_USERS WHERE email = ?';
+    queryDB(sql, [email], (results) => {
+        if (results.length === 0) {
+            res.status(401).send({ message: 'Authentication failed', authResult: 0});
+        } else {
+            const user = results[0];
+            req.session.user = { email };
+            console.log(user)
+            res.send({ message: "Logged in successfully", authResult: 1, user: {email : user.email, address: user.address, phone_no: user.phone_no }});
+        }
+    });
 })
 
 app.post('/facebook', (req, res) => {

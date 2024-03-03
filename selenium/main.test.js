@@ -597,6 +597,66 @@ describe('XSS Injections', () => {
     })
 });
 
+describe("Google Login", () => {
+
+    test("Right Google Account", async () => {
+
+        const driver = await new Builder().forBrowser(Browser.CHROME).build();
+        await driver.get('http://localhost:3000/');
+        const googleButton = await driver.findElement(By.name('google_button'))
+
+        await googleButton.click()
+        
+        let all_handles = await driver.getAllWindowHandles()
+        let childWindowHandle = all_handles[all_handles.length - 1]
+        await driver.switchTo().window(childWindowHandle);
+        let emailField = await driver.findElement(By.xpath("//input[@type='email']")); // Replace 'text' with the input type you're looking for
+        
+        let email = sample[8].email
+        let password = sample[8].password
+        
+        await typeWithAnimation(emailField, email)
+        let nextButton = await driver.findElement(By.xpath(`//*[@id="identifierNext"]/div/button`))
+        await nextButton.click()
+        await sleep(4)
+        await driver.findElement(By.xpath(`//input[@type='password']`)).sendKeys(password);
+        let nextButton1 = await driver.findElement(By.xpath(`//*[@id="passwordNext"]/div/button`))
+        await nextButton1.click()
+        await driver.switchTo().defaultContent()
+        let currentUrl = await driver.getCurrentUrl()
+        console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`);
+    })
+
+    test("Wrong Google Account", async () => {
+
+        const driver = await new Builder().forBrowser(Browser.CHROME).build();
+        await driver.get('http://localhost:3000/');
+        const googleButton = await driver.findElement(By.name('google_button'))
+
+        await googleButton.click()
+        
+        let all_handles = await driver.getAllWindowHandles()
+        let childWindowHandle = all_handles[all_handles.length - 1]
+        await driver.switchTo().window(childWindowHandle);
+        let emailField = await driver.findElement(By.xpath("//input[@type='email']")); // Replace 'text' with the input type you're looking for
+        
+        let email = sample[9].email
+        let password = sample[9].password
+        
+        await typeWithAnimation(emailField, email)
+        let nextButton = await driver.findElement(By.xpath(`//*[@id="identifierNext"]/div/button`))
+        await nextButton.click()
+        await sleep(4)
+        await driver.findElement(By.xpath(`//input[@type='password']`)).sendKeys(password);
+        let nextButton1 = await driver.findElement(By.xpath(`//*[@id="passwordNext"]/div/button`))
+        await nextButton1.click()
+        await driver.switchTo().defaultContent()
+        let currentUrl = await driver.getCurrentUrl()
+        console.assert(currentUrl === 'http://localhost:3000/', `Expected URL to be 'http://localhost:3000/' but was '${currentUrl}`);
+    })
+    
+})
+
 function generateRandomPassword(length) {
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
     let password = "";
