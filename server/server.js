@@ -78,17 +78,21 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/google', (req, res) => {
-    // Log the email received in the request body
-    console.log('Received email from loginform:', req.body.email);
-
-    // You can perform additional operations here, such as verifying the email or storing it in a database
-
-    // Respond to the client to acknowledge the received data
-    res.json({
-        status: 'success',
-        message: `Received email: ${req.body.email}`
+    const email = req.query.email
+    console.log(email)
+    const sql = 'SELECT * FROM GOOGLE_USERS WHERE email = ?';
+    queryDB(sql, [email], (results) => {
+        if (results.length === 0) {
+            res.status(401).send({ message: 'Authentication failed', authResult: 0});
+        } else {
+            const user = results[0];
+            req.session.user = { email };
+            console.log(user)
+            res.send({ message: "Logged in successfully", authResult: 1, user: {email : user.email, address: user.address, phone_no: user.phone_no }});
+        }
     });
-});
+})
+
 
 app.post('/facebook', (req, res) => {
     res.send('facebook')

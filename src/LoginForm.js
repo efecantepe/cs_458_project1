@@ -41,14 +41,13 @@ function LoginForm() {
         // Decode JWT to log the email and openid properties
         const decodedToken = parseJwt(response.credential); // Assuming parseJwt is a function you'll implement
         console.log("Email: " + decodedToken.email);
-        //TODO HANGI MAILLE GIRDIYSEN O GELIYOR
-        setLogged(true);
-        // Send the token to your backend for verification
-        // Now, send the email to your backend
-        //TODO ISTEGI BURADA GONDERIYORUM
-        axios.post('http://localhost:7000/google', { email: decodedToken.email })
+        
+        axios.post(`http://localhost:4236/google?email=${decodedToken.email}`, { email: decodedToken.email })
             .then((response) => {
-                console.log('Server response:', response.data);
+                console.log('Server response:', response.data.user);
+                setEmail(response.data.user.email)
+                setAddress(response.data.user.address)
+                setPhone(response.data.user.phone_no)
                 setLogged(true); // Update the login state based on server response
             })
             .catch((error) => {
