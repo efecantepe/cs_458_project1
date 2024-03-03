@@ -657,6 +657,203 @@ describe("Google Login", () => {
     
 })
 
+describe('Browser Checks', () => {
+    let driver;  
+
+  // Set browser driver before all the tests.
+  beforeAll(async () => {
+    // jest.setTimeout(5000000)
+    //let driver = await new Builder().forBrowser(Browser.CHROME).build();
+    //await driver.navigate('http://localhost:3000');
+  });
+
+  // After all tests are closed, close the browser driver.
+  afterAll(async () => {
+    
+  });
+
+  test('Chrome Right mail and password', async () => {
+    const driver = await new Builder().forBrowser(Browser.CHROME).build();
+    await driver.get('http://localhost:3000/');
+    const emailField = await driver.findElement(By.name('email'));
+    const passwordField = await driver.findElement(By.name('password'));
+
+    expect(emailField !== null).toBeTruthy();
+    expect(passwordField !== null).toBeTruthy();
+    
+    let email = sample[0].email;
+    let password = sample[0].password;
+    
+    await typeWithAnimation(emailField, email);
+    await typeWithAnimation(passwordField, password);
+            
+    const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+    button.click()
+
+    await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+        
+    let currentUrl = await driver.getCurrentUrl();
+    console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`);
+
+
+});
+
+    test("Chrome Email Password Dont Match", async () => {
+
+        const driver = await new Builder().forBrowser(Browser.CHROME).build()
+        await driver.get('http://localhost:3000/')
+
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+        
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+
+        let email = sample[1].email;
+        let password = sample[1].password
+
+        console.log(email, " ", password)
+
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        
+        await button.click()
+
+        await sleep(3)
+
+        await driver.switchTo().alert().then(
+            function(alert) {
+                alert.getText().then(function(alertText){
+                    expect(alertText === 'Email or Password is false').toBeTruthy()
+                })
+            }
+        )
+
+    })
+    test('Firefox Right mail and password', async () => {
+        const driver = await new Builder().forBrowser(Browser.FIREFOX).build();
+        await driver.get('http://localhost:3000/');
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+    
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+        
+        let email = sample[0].email;
+        let password = sample[0].password;
+        
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+                
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        button.click()
+    
+        await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+            
+        let currentUrl = await driver.getCurrentUrl();
+        console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`);
+    
+    
+    });
+    
+    test("Firefox Email Password Dont Match", async () => {
+
+        const driver = await new Builder().forBrowser(Browser.FIREFOX).build()
+        await driver.get('http://localhost:3000/')
+
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+        
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+
+        let email = sample[1].email;
+        let password = sample[1].password
+
+        console.log(email, " ", password)
+
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        
+        await button.click()
+
+        await sleep(3)
+
+        await driver.switchTo().alert().then(
+            function(alert) {
+                alert.getText().then(function(alertText){
+                    expect(alertText === 'Email or Password is false').toBeTruthy()
+                })
+            }
+        )
+
+    })
+
+    test('Edge Right mail and password', async () => {
+        const driver = await new Builder().forBrowser(Browser.EDGE).build();
+        await driver.get('http://localhost:3000/');
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+    
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+        
+        let email = sample[0].email;
+        let password = sample[0].password;
+        
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+                
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        button.click()
+    
+        await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+            
+        let currentUrl = await driver.getCurrentUrl();
+        console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`);
+    
+    
+    });
+    
+    test("Edge Email Password Dont Match", async () => {
+
+        const driver = await new Builder().forBrowser(Browser.EDGE).build()
+        await driver.get('http://localhost:3000/')
+
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
+        
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+
+        let email = sample[1].email;
+        let password = sample[1].password
+
+        console.log(email, " ", password)
+
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        
+        await button.click()
+
+        await sleep(3)
+
+        await driver.switchTo().alert().then(
+            function(alert) {
+                alert.getText().then(function(alertText){
+                    expect(alertText === 'Email or Password is false').toBeTruthy()
+                })
+            }
+        )
+    
+    })
+});
 function generateRandomPassword(length) {
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
     let password = "";
