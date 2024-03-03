@@ -9,45 +9,45 @@ const { UserPromptHandler } = require('selenium-webdriver/lib/capabilities');
 jest.setTimeout(2147483647)
 
 describe('Login Input', () => {
-    let driver;  
+    let driver;
 
-  // Set browser driver before all the tests.
-  beforeAll(async () => {
-    // jest.setTimeout(5000000)
-    //let driver = await new Builder().forBrowser(Browser.CHROME).build();
-    //await driver.navigate('http://localhost:3000');
-  });
+    // Set browser driver before all the tests.
+    beforeAll(async () => {
+        // jest.setTimeout(5000000)
+        //let driver = await new Builder().forBrowser(Browser.CHROME).build();
+        //await driver.navigate('http://localhost:3000');
+    });
 
-  // After all tests are closed, close the browser driver.
-  afterAll(async () => {
-    
-  });
+    // After all tests are closed, close the browser driver.
+    afterAll(async () => {
 
-  test('Right mail and password', async () => {
-    const driver = await new Builder().forBrowser(Browser.CHROME).build();
-    await driver.get('http://localhost:3000/');
-    const emailField = await driver.findElement(By.name('email'));
-    const passwordField = await driver.findElement(By.name('password'));
+    });
 
-    expect(emailField !== null).toBeTruthy();
-    expect(passwordField !== null).toBeTruthy();
-    
-    let email = sample[0].email;
-    let password = sample[0].password;
-    
-    await typeWithAnimation(emailField, email);
-    await typeWithAnimation(passwordField, password);
-            
-    const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-    button.click()
+    test('Right mail and password', async () => {
+        const driver = await new Builder().forBrowser(Browser.CHROME).build();
+        await driver.get('http://localhost:3000/');
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
 
-    await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
-        
-    let currentUrl = await driver.getCurrentUrl();
-    console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`);
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+
+        let email = sample[0].email;
+        let password = sample[0].password;
+
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        button.click()
+
+        await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+
+        let currentUrl = await driver.getCurrentUrl();
+        console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`);
 
 
-});
+    });
 
     test("Email Password Dont Match", async () => {
 
@@ -56,7 +56,7 @@ describe('Login Input', () => {
 
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
-        
+
         expect(emailField !== null).toBeTruthy();
         expect(passwordField !== null).toBeTruthy();
 
@@ -69,14 +69,14 @@ describe('Login Input', () => {
         await typeWithAnimation(passwordField, password);
 
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-        
+
         await button.click()
 
         await sleep(3)
 
         await driver.switchTo().alert().then(
-            function(alert) {
-                alert.getText().then(function(alertText){
+            function (alert) {
+                alert.getText().then(function (alertText) {
                     expect(alertText === 'Email or Password is false').toBeTruthy()
                 })
             }
@@ -91,7 +91,7 @@ describe('Login Input', () => {
 
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
-        
+
         expect(emailField !== null).toBeTruthy();
         expect(passwordField !== null).toBeTruthy();
 
@@ -102,12 +102,12 @@ describe('Login Input', () => {
         await typeWithAnimation(passwordField, password);
 
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-        
+
         await button.click()
 
         await driver.switchTo().alert().then(
-            function(alert) {
-                alert.getText().then(function(alertText){
+            function (alert) {
+                alert.getText().then(function (alertText) {
                     expect(alertText === 'Email and Password is too long').toBeTruthy()
                 })
             }
@@ -123,7 +123,7 @@ describe('Login Input', () => {
 
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
-        
+
         expect(emailField !== null).toBeTruthy();
         expect(passwordField !== null).toBeTruthy();
 
@@ -134,12 +134,12 @@ describe('Login Input', () => {
         await typeWithAnimation(passwordField, password);
 
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-        
+
         await button.click()
 
         await driver.switchTo().alert().then(
-            function(alert) {
-                alert.getText().then(function(alertText){
+            function (alert) {
+                alert.getText().then(function (alertText) {
                     expect(alertText === 'Email is too long').toBeTruthy()
                 })
             }
@@ -154,7 +154,7 @@ describe('Login Input', () => {
 
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
-        
+
         expect(emailField !== null).toBeTruthy();
         expect(passwordField !== null).toBeTruthy();
 
@@ -165,18 +165,16 @@ describe('Login Input', () => {
         await typeWithAnimation(passwordField, password);
 
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-        
+
         await button.click()
 
         await driver.switchTo().alert().then(
-            function(alert) {
-                alert.getText().then(function(alertText){
+            function (alert) {
+                alert.getText().then(function (alertText) {
                     expect(alertText === 'Password is too long').toBeTruthy()
                 })
             }
         )
-
-
     })
 
     test("Empty Email", async () => {
@@ -186,7 +184,7 @@ describe('Login Input', () => {
 
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
-        
+
         expect(emailField !== null).toBeTruthy();
         expect(passwordField !== null).toBeTruthy();
 
@@ -197,12 +195,12 @@ describe('Login Input', () => {
         await typeWithAnimation(passwordField, password);
 
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-        
+
         await button.click()
 
         await driver.switchTo().alert().then(
-            function(alert) {
-                alert.getText().then(function(alertText){
+            function (alert) {
+                alert.getText().then(function (alertText) {
                     expect(alertText === 'Email or Password cannot be empty').toBeTruthy()
                 })
             }
@@ -217,7 +215,7 @@ describe('Login Input', () => {
 
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
-        
+
         expect(emailField !== null).toBeTruthy();
         expect(passwordField !== null).toBeTruthy();
 
@@ -228,17 +226,16 @@ describe('Login Input', () => {
         await typeWithAnimation(passwordField, password);
 
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-        
+
         await button.click()
 
         await driver.switchTo().alert().then(
-            function(alert) {
-                alert.getText().then(function(alertText){
+            function (alert) {
+                alert.getText().then(function (alertText) {
                     expect(alertText === 'Email or Password cannot be empty').toBeTruthy()
                 })
             }
         )
-
     })
 
     test("Empty Email Empty Password", async () => {
@@ -248,7 +245,7 @@ describe('Login Input', () => {
 
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
-        
+
         expect(emailField !== null).toBeTruthy();
         expect(passwordField !== null).toBeTruthy();
 
@@ -259,12 +256,12 @@ describe('Login Input', () => {
         await typeWithAnimation(passwordField, password);
 
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-        
+
         await button.click()
 
         await driver.switchTo().alert().then(
-            function(alert) {
-                alert.getText().then(function(alertText){
+            function (alert) {
+                alert.getText().then(function (alertText) {
                     expect(alertText === 'Email or Password cannot be empty').toBeTruthy()
                 })
             }
@@ -274,7 +271,7 @@ describe('Login Input', () => {
 
 
 
-  // Additional tests...
+    // Additional tests...
 });
 
 describe('SQL injection', () => {
@@ -290,7 +287,7 @@ describe('SQL injection', () => {
     test('SQL injection for creating a new user without any creditentials', async () => {
         let driver;
         let driver2
-        try{
+        try {
             driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
             await driver.get('http://localhost:3000/');
             const emailField = await driver.findElement(By.name('email'));
@@ -301,15 +298,15 @@ describe('SQL injection', () => {
             const fakePassword = generateRandomPassword(3);
             const fakeEmail = generateRandomEmail(3);
             const fakeAddr = generateRandomString(2);
-            let email = "' OR '1'='1'; INSERT INTO USERS (password, email, phone_no, address) VALUES ('"+fakePassword+"', '"+fakeEmail+"', '1', '"+fakeAddr+"'); --"; //No Mail
+            let email = "' OR '1'='1'; INSERT INTO USERS (password, email, phone_no, address) VALUES ('" + fakePassword + "', '" + fakeEmail + "', '1', '" + fakeAddr + "'); --"; //No Mail
             let password = "' OR '1'='1; --"; //No Password
             await emailField.sendKeys(email);
             await passwordField.sendKeys(password);
-                    
+
             const button = await driver.findElement(By.name('login_button'));
             expect(button).not.toBeNull();
             await button.click();
-            
+
             //If injection worked, then the user with random genarated user will be in the db.
             driver2 = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
             await driver2.get('http://localhost:3000/');
@@ -330,7 +327,7 @@ describe('SQL injection', () => {
             if (driver) {
                 await driver.quit(); // Ensure the driver is closed even if the test fails.
             }
-            if(driver2){
+            if (driver2) {
                 await driver2.quit()
             }
         }
@@ -339,7 +336,7 @@ describe('SQL injection', () => {
     test('SQL injection DROP TABLES using right creditentials', async () => {
         let driver;
         let driver2;
-        try{
+        try {
             driver = await new Builder().forBrowser(Browser.CHROME).build();
             await driver.get('http://localhost:3000/');
             const emailField = await driver.findElement(By.name('email'));
@@ -351,7 +348,7 @@ describe('SQL injection', () => {
             let password = "password1' OR '1'='1'; DROP TABLE USERS; --"; //Right Password
             await emailField.sendKeys(email);
             await passwordField.sendKeys(password);
-                    
+
             const button = await driver.findElement(By.name('login_button'));
             expect(button).not.toBeNull();
             await button.click()
@@ -375,14 +372,14 @@ describe('SQL injection', () => {
             if (driver) {
                 await driver.quit(); // Ensure the driver is closed even if the test fails.
             }
-            if(driver2){
+            if (driver2) {
                 await driver2.quit()
             }
         }
     });
     test('SQL injection using wrong creditentials', async () => {
         let driver;
-        try{
+        try {
             driver = await new Builder().forBrowser(Browser.CHROME).build();
             await driver.get('http://localhost:3000/');
             const emailField = await driver.findElement(By.name('email'));
@@ -394,13 +391,13 @@ describe('SQL injection', () => {
             let password = "password565' OR '1'='1'; DROP TABLE USERS; --"; //Wrong Password
             await emailField.sendKeys(email);
             await passwordField.sendKeys(password);
-                    
+
             const button = await driver.findElement(By.name('login_button'));
             expect(button).not.toBeNull();
             await button.click()
 
             await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
-            
+
             // Get the current URL
             let currentUrl = await driver.getCurrentUrl();
 
@@ -415,13 +412,13 @@ describe('SQL injection', () => {
             }
         }
     });
-    
+
 });
 
 describe('XSS Injections', () => {
     test('XSS injection using script fields', async () => {
         let driver;
-        try{
+        try {
             driver = await new Builder().forBrowser(Browser.CHROME).build();
             await driver.get('http://localhost:3000/');
             const emailField = await driver.findElement(By.name('email'));
@@ -431,7 +428,7 @@ describe('XSS Injections', () => {
             expect(passwordField).not.toBeNull();
             await emailField.sendKeys(`<script>alert('XSS')</script>`, Key.RETURN);
             await passwordField.sendKeys("password");
-                    
+
             const button = await driver.findElement(By.name('login_button'));
             expect(button).not.toBeNull();
             await button.click()
@@ -441,23 +438,23 @@ describe('XSS Injections', () => {
             // Attempt to switch to the alert
             let alert = await driver.switchTo().alert();
             let alertText = await alert.getText();
-            
+
             expect(alertText !== "XSS").toBeTruthy();
 
         }
-        catch(error){
+        catch (error) {
             console.error('Test failed', error);
             throw error;
         }
-        finally{
-            if(driver){
+        finally {
+            if (driver) {
                 driver.quit();
             }
         }
     })
     test('XSS injection using image onerror', async () => {
         let driver;
-        try{
+        try {
             driver = await new Builder().forBrowser(Browser.CHROME).build();
             await driver.get('http://localhost:3000/');
             const emailField = await driver.findElement(By.name('email'));
@@ -467,7 +464,7 @@ describe('XSS Injections', () => {
             expect(passwordField).not.toBeNull();
             await emailField.sendKeys(`<img src="invalid" onerror="alert('XSS via image onerror')">`, Key.RETURN);
             await passwordField.sendKeys("password");
-                    
+
             const button = await driver.findElement(By.name('login_button'));
             expect(button).not.toBeNull();
             await button.click()
@@ -477,22 +474,22 @@ describe('XSS Injections', () => {
             // Attempt to switch to the alert
             let alert = await driver.switchTo().alert();
             let alertText = await alert.getText();
-            
+
             expect(alertText !== "XSS via image onerror").toBeTruthy();
 
         }
-        catch(error){
+        catch (error) {
             throw error;
         }
-        finally{
-            if(driver){
+        finally {
+            if (driver) {
                 driver.quit();
             }
         }
     })
     test('XSS injection using CSS import', async () => {
         let driver;
-        try{
+        try {
             driver = await new Builder().forBrowser(Browser.CHROME).build();
             await driver.get('http://localhost:3000/');
             const emailField = await driver.findElement(By.name('email'));
@@ -502,7 +499,7 @@ describe('XSS Injections', () => {
             expect(passwordField).not.toBeNull();
             await emailField.sendKeys(`<style>@import 'javascript:alert("XSS via CSS import")';</style>`, Key.RETURN);
             await passwordField.sendKeys("password");
-                    
+
             const button = await driver.findElement(By.name('login_button'));
             expect(button).not.toBeNull();
             await button.click()
@@ -512,22 +509,22 @@ describe('XSS Injections', () => {
             // Attempt to switch to the alert
             let alert = await driver.switchTo().alert();
             let alertText = await alert.getText();
-            
+
             expect(alertText !== "XSS via CSS import").toBeTruthy();
 
         }
-        catch(error){
+        catch (error) {
             throw error;
         }
-        finally{
-            if(driver){
+        finally {
+            if (driver) {
                 driver.quit();
             }
         }
     })
     test('XSS injection using HTML injection', async () => {
         let driver;
-        try{
+        try {
             driver = await new Builder().forBrowser(Browser.CHROME).build();
             await driver.get('http://localhost:3000/');
             const emailField = await driver.findElement(By.name('email'));
@@ -537,7 +534,7 @@ describe('XSS Injections', () => {
             expect(passwordField).not.toBeNull();
             await emailField.sendKeys(`<b onmouseover=alert('XSS via HTML')>Hover over me!</b>`, Key.RETURN);
             await passwordField.sendKeys("password");
-                    
+
             const button = await driver.findElement(By.name('login_button'));
             expect(button).not.toBeNull();
             await button.click()
@@ -547,22 +544,22 @@ describe('XSS Injections', () => {
             // Attempt to switch to the alert
             let alert = await driver.switchTo().alert();
             let alertText = await alert.getText();
-            
+
             expect(alertText !== "XSS via HTML").toBeTruthy();
 
         }
-        catch(error){
+        catch (error) {
             throw error;
         }
-        finally{
-            if(driver){
+        finally {
+            if (driver) {
                 driver.quit();
             }
         }
     })
     test('XSS injection using SVG onload', async () => {
         let driver;
-        try{
+        try {
             driver = await new Builder().forBrowser(Browser.CHROME).build();
             await driver.get('http://localhost:3000/');
             const emailField = await driver.findElement(By.name('email'));
@@ -572,7 +569,7 @@ describe('XSS Injections', () => {
             expect(passwordField).not.toBeNull();
             await emailField.sendKeys(`<svg xmlns="http://www.w3.org/2000/svg" onload="alert('XSS via SVG onload')"></svg>`, Key.RETURN);
             await passwordField.sendKeys("password");
-                    
+
             const button = await driver.findElement(By.name('login_button'));
             expect(button).not.toBeNull();
             await button.click()
@@ -582,15 +579,15 @@ describe('XSS Injections', () => {
             // Attempt to switch to the alert
             let alert = await driver.switchTo().alert();
             let alertText = await alert.getText();
-            
+
             expect(alertText !== "XSS via SVG onload").toBeTruthy();
 
         }
-        catch(error){
+        catch (error) {
             throw error;
         }
-        finally{
-            if(driver){
+        finally {
+            if (driver) {
                 driver.quit();
             }
         }
@@ -606,15 +603,15 @@ describe("Google Login", () => {
         const googleButton = await driver.findElement(By.name('google_button'))
 
         await googleButton.click()
-        
+
         let all_handles = await driver.getAllWindowHandles()
         let childWindowHandle = all_handles[all_handles.length - 1]
         await driver.switchTo().window(childWindowHandle);
         let emailField = await driver.findElement(By.xpath("//input[@type='email']")); // Replace 'text' with the input type you're looking for
-        
+
         let email = sample[8].email
         let password = sample[8].password
-        
+
         await typeWithAnimation(emailField, email)
         let nextButton = await driver.findElement(By.xpath(`//*[@id="identifierNext"]/div/button`))
         await nextButton.click()
@@ -634,15 +631,15 @@ describe("Google Login", () => {
         const googleButton = await driver.findElement(By.name('google_button'))
 
         await googleButton.click()
-        
+
         let all_handles = await driver.getAllWindowHandles()
         let childWindowHandle = all_handles[all_handles.length - 1]
         await driver.switchTo().window(childWindowHandle);
         let emailField = await driver.findElement(By.xpath("//input[@type='email']")); // Replace 'text' with the input type you're looking for
-        
+
         let email = sample[9].email
         let password = sample[9].password
-        
+
         await typeWithAnimation(emailField, email)
         let nextButton = await driver.findElement(By.xpath(`//*[@id="identifierNext"]/div/button`))
         await nextButton.click()
@@ -654,49 +651,49 @@ describe("Google Login", () => {
         let currentUrl = await driver.getCurrentUrl()
         console.assert(currentUrl === 'http://localhost:3000/', `Expected URL to be 'http://localhost:3000/' but was '${currentUrl}`);
     })
-    
+
 })
 
 describe('Browser Checks', () => {
-    let driver;  
+    let driver;
 
-  // Set browser driver before all the tests.
-  beforeAll(async () => {
-    // jest.setTimeout(5000000)
-    //let driver = await new Builder().forBrowser(Browser.CHROME).build();
-    //await driver.navigate('http://localhost:3000');
-  });
+    // Set browser driver before all the tests.
+    beforeAll(async () => {
+        // jest.setTimeout(5000000)
+        //let driver = await new Builder().forBrowser(Browser.CHROME).build();
+        //await driver.navigate('http://localhost:3000');
+    });
 
-  // After all tests are closed, close the browser driver.
-  afterAll(async () => {
-    
-  });
+    // After all tests are closed, close the browser driver.
+    afterAll(async () => {
 
-  test('Chrome Right mail and password', async () => {
-    const driver = await new Builder().forBrowser(Browser.CHROME).build();
-    await driver.get('http://localhost:3000/');
-    const emailField = await driver.findElement(By.name('email'));
-    const passwordField = await driver.findElement(By.name('password'));
+    });
 
-    expect(emailField !== null).toBeTruthy();
-    expect(passwordField !== null).toBeTruthy();
-    
-    let email = sample[0].email;
-    let password = sample[0].password;
-    
-    await typeWithAnimation(emailField, email);
-    await typeWithAnimation(passwordField, password);
-            
-    const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-    button.click()
+    test('Chrome Right mail and password', async () => {
+        const driver = await new Builder().forBrowser(Browser.CHROME).build();
+        await driver.get('http://localhost:3000/');
+        const emailField = await driver.findElement(By.name('email'));
+        const passwordField = await driver.findElement(By.name('password'));
 
-    await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
-        
-    let currentUrl = await driver.getCurrentUrl();
-    console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`);
+        expect(emailField !== null).toBeTruthy();
+        expect(passwordField !== null).toBeTruthy();
+
+        let email = sample[0].email;
+        let password = sample[0].password;
+
+        await typeWithAnimation(emailField, email);
+        await typeWithAnimation(passwordField, password);
+
+        const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
+        button.click()
+
+        await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
+
+        let currentUrl = await driver.getCurrentUrl();
+        console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`);
 
 
-});
+    });
 
     test("Chrome Email Password Dont Match", async () => {
 
@@ -705,7 +702,7 @@ describe('Browser Checks', () => {
 
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
-        
+
         expect(emailField !== null).toBeTruthy();
         expect(passwordField !== null).toBeTruthy();
 
@@ -718,14 +715,14 @@ describe('Browser Checks', () => {
         await typeWithAnimation(passwordField, password);
 
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-        
+
         await button.click()
 
         await sleep(3)
 
         await driver.switchTo().alert().then(
-            function(alert) {
-                alert.getText().then(function(alertText){
+            function (alert) {
+                alert.getText().then(function (alertText) {
                     expect(alertText === 'Email or Password is false').toBeTruthy()
                 })
             }
@@ -737,27 +734,27 @@ describe('Browser Checks', () => {
         await driver.get('http://localhost:3000/');
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
-    
+
         expect(emailField !== null).toBeTruthy();
         expect(passwordField !== null).toBeTruthy();
-        
+
         let email = sample[0].email;
         let password = sample[0].password;
-        
+
         await typeWithAnimation(emailField, email);
         await typeWithAnimation(passwordField, password);
-                
+
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
         button.click()
-    
+
         await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
-            
+
         let currentUrl = await driver.getCurrentUrl();
         console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`);
-    
-    
+
+
     });
-    
+
     test("Firefox Email Password Dont Match", async () => {
 
         const driver = await new Builder().forBrowser(Browser.FIREFOX).build()
@@ -765,7 +762,7 @@ describe('Browser Checks', () => {
 
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
-        
+
         expect(emailField !== null).toBeTruthy();
         expect(passwordField !== null).toBeTruthy();
 
@@ -778,14 +775,14 @@ describe('Browser Checks', () => {
         await typeWithAnimation(passwordField, password);
 
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-        
+
         await button.click()
 
         await sleep(3)
 
         await driver.switchTo().alert().then(
-            function(alert) {
-                alert.getText().then(function(alertText){
+            function (alert) {
+                alert.getText().then(function (alertText) {
                     expect(alertText === 'Email or Password is false').toBeTruthy()
                 })
             }
@@ -798,27 +795,27 @@ describe('Browser Checks', () => {
         await driver.get('http://localhost:3000/');
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
-    
+
         expect(emailField !== null).toBeTruthy();
         expect(passwordField !== null).toBeTruthy();
-        
+
         let email = sample[0].email;
         let password = sample[0].password;
-        
+
         await typeWithAnimation(emailField, email);
         await typeWithAnimation(passwordField, password);
-                
+
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
         button.click()
-    
+
         await driver.wait(until.urlIs('http://localhost:3000/mainPage'), 10000);
-            
+
         let currentUrl = await driver.getCurrentUrl();
         console.assert(currentUrl === 'http://localhost:3000/mainPage', `Expected URL to be 'http://localhost:3000/mainPage' but was '${currentUrl}`);
-    
-    
+
+
     });
-    
+
     test("Edge Email Password Dont Match", async () => {
 
         const driver = await new Builder().forBrowser(Browser.EDGE).build()
@@ -826,7 +823,7 @@ describe('Browser Checks', () => {
 
         const emailField = await driver.findElement(By.name('email'));
         const passwordField = await driver.findElement(By.name('password'));
-        
+
         expect(emailField !== null).toBeTruthy();
         expect(passwordField !== null).toBeTruthy();
 
@@ -839,19 +836,19 @@ describe('Browser Checks', () => {
         await typeWithAnimation(passwordField, password);
 
         const button = await driver.findElement(By.name('login_button')); // Replace 'button_name' with the name attribute of the button
-        
+
         await button.click()
 
         await sleep(3)
 
         await driver.switchTo().alert().then(
-            function(alert) {
-                alert.getText().then(function(alertText){
+            function (alert) {
+                alert.getText().then(function (alertText) {
                     expect(alertText === 'Email or Password is false').toBeTruthy()
                 })
             }
         )
-    
+
     })
 });
 function generateRandomPassword(length) {
@@ -883,8 +880,8 @@ function generateRandomString(length) {
 
 async function sleep(seconds) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));
-  }
-  
+}
+
 
 async function typeWithAnimation(element, text) {
     const delay = 1; // Adjust the delay (in milliseconds) between each character
