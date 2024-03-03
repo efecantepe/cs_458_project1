@@ -45,7 +45,7 @@ app.use(session({
 }));
 
 app.post('/login', (req, res) => {
-    
+
     const email = req.query.email
     const password = req.query.password
 
@@ -92,6 +92,7 @@ app.post('/google', (req, res) => {
         }
     });
 })
+
 
 app.post('/facebook', (req, res) => {
     res.send('facebook')
